@@ -35,12 +35,13 @@ public final class SkillTreeScreen extends Screen {
         GuiComponent.fill(pose, left, top, right, top + 30, 0xF20D111B);
         GuiComponent.fill(pose, left, top + 30, right, top + 31, 0xFF3A4654);
         drawCenteredString(pose, font, new TextComponent("TALENT TREE"), width / 2, top + 10, 0xFFFFFFFF);
-        drawString(pose, font, new TextComponent("✦ " + availableLevels()), left + 12, top + 10, 0xFFFFD56A);
+        drawString(pose, font, new TextComponent("✦ " + availableLevels() + " XP LEVELS AVAILABLE"), left + 12, top + 10, 0xFFFFD56A);
         drawString(pose, font, new TextComponent("XP " + experience()), right - 112, top + 10, 0xFFB9C7D6);
         drawString(pose, font, new TextComponent("✧ " + ClientState.data().unlockedIds().size() + "/" + SkillNode.all().size()), right - 48, top + 10, 0xFFFFD56A);
 
         int graphRight = right - PANEL_W - 8;
         drawInfo(pose, left + 12, top + 44);
+        drawLegend(pose, left + 12, top + 98);
         GuiComponent.fill(pose, graphRight, top + 38, graphRight + 1, bottom - 8, 0xFF3A4654);
         drawGraph(pose, left + 12, top + 38, graphRight - 10, bottom - 8, mouseX, mouseY);
         drawStats(pose, graphRight + 10, top + 42, right - 10, bottom - 10);
@@ -56,6 +57,13 @@ public final class SkillTreeScreen extends Screen {
         drawString(p, font, new TextComponent(String.valueOf(spentLevels())), x + 98, y + 20, 0xFFFFFFFF);
         drawString(p, font, new TextComponent("NODES UNLOCKED"), x + 6, y + 34, 0xFF9EABB9);
         drawString(p, font, new TextComponent(ClientState.data().unlockedIds().size() + "/" + SkillNode.all().size()), x + 98, y + 34, 0xFFFFFFFF);
+    }
+
+    private void drawLegend(PoseStack p, int x, int y) {
+        drawString(p, font, new TextComponent("HOW TO USE"), x, y, 0xFFFFD56A);
+        drawString(p, font, new TextComponent("Click a bright node to unlock it"), x, y + 14, 0xFFB8C4D2);
+        drawString(p, font, new TextComponent("Click + drag to move  |  Wheel to zoom"), x, y + 28, 0xFF8F9BAA);
+        drawString(p, font, new TextComponent("Green unlocked  Gold available  Gray locked"), x, y + 42, 0xFF8F9BAA);
     }
 
     private void drawGraph(PoseStack p, int gx, int gy, int gw, int gh, int mouseX, int mouseY) {
@@ -74,8 +82,9 @@ public final class SkillTreeScreen extends Screen {
 
     private void drawNode(PoseStack p, SkillNode n) {
         boolean unlocked = ClientState.data().unlocked(n.id());
+        boolean available = ClientState.data().canUnlock(n.id());
         boolean selected = selectedId.equals(n.id());
-        int color = selected ? 0xFFFFE28A : unlocked ? branchColor(n.branch()) : 0xFF8793A1;
+        int color = selected ? 0xFFFFE28A : unlocked ? branchColor(n.branch()) : available ? 0xFFE5B84F : 0xFF8793A1;
         if (n.id().equals("root")) {
             circle(p, n.x(), n.y(), 22, 0xFF172230, color);
             circle(p, n.x(), n.y(), 15, 0xFF101722, selected ? 0xFFFFFFFF : color);
@@ -126,13 +135,23 @@ public final class SkillTreeScreen extends Screen {
         lines.add(new TextComponent("Cost: " + n.cost() + " XP levels"));
         if (n.prerequisite() != null) lines.add(new TextComponent("Requires: " + SkillNode.all().get(n.prerequisite()).name()));
         if (ClientState.data().unlocked(n.id())) lines.add(new TextComponent("Unlocked"));
+        else if (ClientState.data().canUnlock(n.id())) lines.add(new TextComponent("Available - click to unlock"));
+        else lines.add(new TextComponent("Locked - unlock the prerequisite first"));
         List<net.minecraft.util.FormattedCharSequence> tooltip = new ArrayList<>(); for (Component line : lines) tooltip.add(line.getVisualOrderText()); renderTooltip(p, tooltip, mx, my);
     }
 
     private SkillNode hovered(double mx, double my) {
-        int gx = 30, gy = 62, gw = Math.max(100, width - PANEL_W - 66), gh = height - 110;
+        int left = 18, top = 24;
+        int right = width - 18, bottom = height - 18;
+        int graphRight = right - PANEL_W - 8;
+        int gx = left + 12, gy = top + 38;
+        int gw = graphRight - 10, gh = bottom - 8;
         double cx = gx + gw / 2d + panX, cy = gy + gh / 2d + panY;
-        for (SkillNode n : SkillNode.all().values()) { double x = cx + n.x() * zoom, y = cy + n.y() * zoom; if (Math.hypot(mx - x, my - y) <= (n.id().equals("root") ? 26 : 14)) return n; }
+        for (SkillNode n : SkillNode.all().values()) {
+            double x = cx + n.x() * zoom, y = cy + n.y() * zoom;
+            double radius = n.id().equals("root") ? 28 : Math.max(12, 14 * zoom);
+            if (Math.hypot(mx - x, my - y) <= radius) return n;
+        }
         return null;
     }
 

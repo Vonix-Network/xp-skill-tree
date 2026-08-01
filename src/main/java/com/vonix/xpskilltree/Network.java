@@ -38,10 +38,17 @@ public final class Network {
                 ServerPlayer player = ctx.getSender();
                 if (player == null) return;
                 SkillNode node = SkillNode.all().get(p.id);
-                if (node == null || !player.getCapability(ModCapabilities.SKILLS).map(d -> d.canUnlock(p.id)).orElse(false)) return;
-                if (player.experienceLevel < node.cost()) return;
+                if (node == null) { player.displayClientMessage(new net.minecraft.network.chat.TextComponent("Unknown talent."), true); return; }
+                if (!player.getCapability(ModCapabilities.SKILLS).map(d -> d.canUnlock(p.id)).orElse(false)) {
+                    player.displayClientMessage(new net.minecraft.network.chat.TextComponent("Unlock the prerequisite talent first."), true);
+                    return;
+                }
+                if (player.experienceLevel < node.cost()) {
+                    player.displayClientMessage(new net.minecraft.network.chat.TextComponent("You need " + node.cost() + " XP levels to unlock this talent."), true);
+                    return;
+                }
                 player.giveExperienceLevels(-node.cost());
-                player.getCapability(ModCapabilities.SKILLS).ifPresent(d -> { d.unlock(p.id); SkillEffects.apply(player, d); Network.sync(player); });
+                player.getCapability(ModCapabilities.SKILLS).ifPresent(d -> { d.unlock(p.id); SkillEffects.apply(player, d); Network.sync(player); player.displayClientMessage(new net.minecraft.network.chat.TextComponent("Unlocked: " + node.name()), true); });
             });
             ctx.setPacketHandled(true);
         }
