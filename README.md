@@ -1,18 +1,16 @@
 # XP Skill Tree
 
-Minecraft 1.18.2 Forge mod by Vonix.Network.
-
-XP Skill Tree adds a server-authoritative branching skill tree. Players press **K** to open the client screen and spend Minecraft XP levels on connected nodes.
+Minecraft 1.18.2 Forge mod by Vonix.Network. Press **K** to open a server-authoritative radial talent tree and spend Minecraft XP levels on connected skills.
 
 ## Features
 
-- Branching Fire and Mana paths
+- **41 skills** across eight colored paths: Arcane, Flame, Frost, Storm, Guardian, Ranger, Void, and Vitality
+- Radial layout with a central Awakening node, branch connectors, milestone mastery nodes, and color-coded states
+- Hover detail panel with branch, effect, cost, and prerequisite information
+- Zoom with the mouse wheel and pan by dragging the tree
 - Server-side prerequisite and XP validation
-- Player capability persistence across sessions and death
-- Client synchronization on login, respawn, and dimension changes
-- Optional Iron's Spells 'n Spellbooks integration (`irons_spellbooks`)
-- Spell power and max-mana attribute modifiers when Iron's Spells is installed
-- Optional mana regeneration hook
+- Capability persistence across sessions, death, login, respawn, and dimension changes
+- Optional Iron's Spells 'n Spellbooks spell-power and mana integration
 
 ## Build
 
@@ -28,7 +26,7 @@ The distributable JAR is written to `build/libs/`.
 
 - Minecraft 1.18.2
 - Forge 40.2.0+
-- Iron's Spells integration is optional at runtime and was implemented against the public 1.18.2 source branch.
+- Iron's Spells integration is optional at runtime.
 
 ## License
 
