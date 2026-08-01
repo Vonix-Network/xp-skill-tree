@@ -6,7 +6,7 @@ modId="xpskilltree"
 version="${file.jarVersion}"
 displayName="XP Skill Tree"
 authors="Vonix.Network"
-description='''An XP-powered branching skill tree with optional Iron's Spells integration.'''
+description='''XP Skill Tree adds a deep, server-authoritative radial progression system to Minecraft 1.18.2. Press K to open the TALENT TREE and spend experience levels to unlock 41 connected skills across eight paths: Arcane, Flame, Frost, Storm, Guardian, Ranger, Void, and Vitality. Explore colored branches, inspect skill details, zoom and pan across the tree, and build a character that matches your playstyle. Progress is stored per player and synchronized safely between server and client. Iron's Spells 'n Spellbooks integration is optional and enhances compatible spell-power and mana effects when installed.'''
 [[dependencies.xpskilltree]]
 modId="forge"
 mandatory=true
