@@ -21,19 +21,39 @@ public final class SkillEffects {
     public static void apply(ServerPlayer player, SkillTreeData data) {
         double spell = 0.0D;
         double mana = 0.0D;
+        double maxMana = 0.0D;
+        double cooldown = 0.0D;
+        double health = 0.0D;
+        double armor = 0.0D;
+        double moveSpeed = 0.0D;
         for (String id : data.unlockedIds()) {
             SkillNode node = SkillNode.all().get(id);
             if (node == null) continue;
             if (node.effect() == SkillNode.Effect.SPELL_DAMAGE) spell += node.amount();
             if (node.effect() == SkillNode.Effect.MANA_REGEN) mana += node.amount() * 100.0D;
+            if (node.effect() == SkillNode.Effect.MAX_MANA) maxMana += node.amount();
+            if (node.effect() == SkillNode.Effect.COOLDOWN) cooldown += node.amount();
+            if (node.effect() == SkillNode.Effect.HEALTH) health += node.amount();
+            if (node.effect() == SkillNode.Effect.ARMOR) armor += node.amount();
+            if (node.effect() == SkillNode.Effect.MOVE_SPEED) moveSpeed += node.amount();
         }
         setModifier(player, "irons_spellbooks:spell_power", SPELL_DAMAGE_UUID, spell);
-        setModifier(player, "irons_spellbooks:max_mana", MANA_UUID, mana);
+        setModifier(player, "irons_spellbooks:max_mana", MANA_UUID, maxMana);
+        setVanillaModifier(player, net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, UUID.fromString("a6c6b163-72ae-4bf5-9b3f-e1c4e00b5003"), health);
+        setVanillaModifier(player, net.minecraft.world.entity.ai.attributes.Attributes.ARMOR, UUID.fromString("a6c6b163-72ae-4bf5-9b3f-e1c4e00b5004"), armor);
+        setVanillaModifier(player, net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, UUID.fromString("a6c6b163-72ae-4bf5-9b3f-e1c4e00b5005"), moveSpeed);
     }
 
     private static void setModifier(ServerPlayer player, String id, UUID uuid, double amount) {
         Attribute attribute = ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(id));
         if (attribute == null) return;
+        AttributeInstance instance = player.getAttribute(attribute);
+        if (instance == null) return;
+        instance.removeModifier(uuid);
+        if (amount != 0.0D) instance.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(uuid, XPSkillTreeMod.MODID + ".skill", amount, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADDITION));
+    }
+
+    private static void setVanillaModifier(ServerPlayer player, Attribute attribute, UUID uuid, double amount) {
         AttributeInstance instance = player.getAttribute(attribute);
         if (instance == null) return;
         instance.removeModifier(uuid);
