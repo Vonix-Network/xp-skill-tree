@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="MIT"
+[[mods]]
+modId="xpskilltree"
+version="${file.jarVersion}"
+displayName="XP Skill Tree"
+authors="Vonix.Network"
+description='''An XP-powered branching skill tree with optional Iron's Spells integration.'''
+[[dependencies.xpskilltree]]
+modId="forge"
+mandatory=true
+versionRange="[40.2,41)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.xpskilltree]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.18.2,1.19)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.xpskilltree]]
+modId="irons_spellbooks"
+mandatory=false
+versionRange="[1.18.2,)"
+ordering="AFTER"
+side="BOTH"
