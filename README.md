@@ -11,7 +11,7 @@ Minecraft 1.18.2 Forge mod by Vonix.Network. Press **K** to open a server-author
 - Zoom with the mouse wheel and pan by dragging the tree
 - Server-side prerequisite and XP validation
 - Capability persistence across sessions, death, login, respawn, and dimension changes
-- Optional Iron's Spells 'n Spellbooks spell-power and mana integration
+- **Cosmetic armor wardrobe**: the cosmetic controls are integrated directly into the vanilla inventory screen. Toggle cosmetic armor on/off, assign armor held in the main hand to boots/leggings/chestplate/helmet slots, and clear slots. Cosmetic data is server-authoritative and persists with the player.
 
 ## Mod Description
 
