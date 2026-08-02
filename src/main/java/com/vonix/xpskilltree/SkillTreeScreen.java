@@ -20,11 +20,19 @@ public final class SkillTreeScreen extends Screen {
     private boolean dragging;
     private double lastMouseX, lastMouseY;
     private String selectedId = "root";
+    private SkillNode.Branch activeBranch;
 
     public SkillTreeScreen() { super(new TranslatableComponent("screen.xpskilltree.title")); }
 
     @Override protected void init() {
         addRenderableWidget(new Button(10, 10, 54, 20, new TextComponent("Close"), b -> onClose()));
+        SkillNode.Branch[] branches = SkillNode.Branch.values();
+        int buttonX = 82;
+        for (SkillNode.Branch branch : branches) {
+            String label = branch == SkillNode.Branch.LIGHTNING ? "Storm" : branch.name().charAt(0) + branch.name().substring(1).toLowerCase();
+            addRenderableWidget(new Button(buttonX, 56, 66, 20, new TextComponent(label), b -> activeBranch = activeBranch == branch ? null : branch));
+            buttonX += 70;
+        }
     }
 
     @Override public void render(PoseStack pose, int mouseX, int mouseY, float partial) {
@@ -40,11 +48,13 @@ public final class SkillTreeScreen extends Screen {
         drawString(pose, font, new TextComponent("✧ " + ClientState.data().unlockedIds().size() + "/" + SkillNode.all().size()), right - 48, top + 10, 0xFFFFD56A);
 
         int graphRight = right - PANEL_W - 8;
-        drawInfo(pose, left + 12, top + 44);
-        drawLegend(pose, left + 12, top + 98);
-        GuiComponent.fill(pose, graphRight, top + 38, graphRight + 1, bottom - 8, 0xFF3A4654);
-        drawGraph(pose, left + 12, top + 38, graphRight - 10, bottom - 8, mouseX, mouseY);
-        drawStats(pose, graphRight + 10, top + 42, right - 10, bottom - 10);
+        drawString(pose, font, new TextComponent(activeBranch == null ? "All specializations" : branchTitle(activeBranch)), left + 12, top + 64, 0xFFB8C4D2);
+        drawInfo(pose, left + 12, top + 82);
+        drawLegend(pose, left + 12, top + 136);
+        GuiComponent.fill(pose, graphRight, top + 184, graphRight + 1, bottom - 8, 0xFF3A4654);
+        drawGraph(pose, left + 12, top + 184, graphRight - 10, bottom - 8, mouseX, mouseY);
+        drawSelectedDetails(pose, graphRight + 10, top + 42, right - 10);
+        drawStats(pose, graphRight + 10, top + 146, right - 10, bottom - 10);
         super.render(pose, mouseX, mouseY, partial);
         drawTooltipIfHovered(pose, mouseX, mouseY);
     }
@@ -71,13 +81,21 @@ public final class SkillTreeScreen extends Screen {
         p.translate(gx + gw / 2f + panX, gy + gh / 2f + panY, 0);
         p.scale((float) zoom, (float) zoom, 1);
         for (SkillNode n : SkillNode.all().values()) {
+            if (!visible(n)) continue;
             if (n.prerequisite() == null) continue;
             SkillNode parent = SkillNode.all().get(n.prerequisite());
+            if (!visible(parent)) continue;
             boolean active = ClientState.data().unlocked(n.id()) && ClientState.data().unlocked(parent.id());
             line(p, parent.x(), parent.y(), n.x(), n.y(), active ? branchColor(n.branch()) : 0xFF4C5968);
         }
-        for (SkillNode n : SkillNode.all().values()) drawNode(p, n);
+        for (SkillNode n : SkillNode.all().values()) if (visible(n)) drawNode(p, n);
         p.popPose();
+    }
+
+    private boolean visible(SkillNode node) { return activeBranch == null || node.branch() == activeBranch || node.branch() == SkillNode.Branch.CORE; }
+
+    private String branchTitle(SkillNode.Branch branch) {
+        return (branch == SkillNode.Branch.LIGHTNING ? "Storm" : branch.name().charAt(0) + branch.name().substring(1).toLowerCase()) + " specialization";
     }
 
     private void drawNode(PoseStack p, SkillNode n) {
@@ -93,24 +111,29 @@ public final class SkillTreeScreen extends Screen {
             circle(p, n.x(), n.y(), NODE_R + (selected ? 3 : 0), 0xFF111722, color);
             if (unlocked) circle(p, n.x(), n.y(), 3, color, color);
         }
+        if (selected || (available && !unlocked)) {
+            drawString(p, font, new TextComponent(n.name()), n.x() + 11, n.y() - 4, 0xFFF1F4F8);
+        }
+    }
+
+    private void drawSelectedDetails(PoseStack p, int x, int y, int right) {
+        SkillNode n = SkillNode.all().get(selectedId);
+        GuiComponent.fill(p, x, y, right, y + 94, 0xE8171E2A);
+        section(p, "SELECTED NODE", x + 8, y + 8);
+        drawString(p, font, new TextComponent(n.name()), x + 8, y + 23, branchColor(n.branch()));
+        drawString(p, font, new TextComponent(n.effect().name().replace('_', ' ')), x + 8, y + 38, 0xFFB8C4D2);
+        drawString(p, font, new TextComponent("Cost: " + n.cost() + " XP levels"), x + 8, y + 53, 0xFFFFD56A);
+        drawString(p, font, new TextComponent(n.prerequisite() == null ? "Starting node" : "Requires: " + SkillNode.all().get(n.prerequisite()).name()), x + 8, y + 68, 0xFF9EABB9);
+        drawString(p, font, new TextComponent(ClientState.data().unlocked(n.id()) ? "UNLOCKED" : ClientState.data().canUnlock(n.id()) ? "AVAILABLE" : "LOCKED"), x + 8, y + 82, ClientState.data().unlocked(n.id()) ? 0xFF7CDB9A : ClientState.data().canUnlock(n.id()) ? 0xFFFFD56A : 0xFF8793A1);
     }
 
     private void drawStats(PoseStack p, int x, int y, int right, int bottom) {
         GuiComponent.fill(p, x, y, right, bottom, 0xE8171E2A);
-        section(p, "PLAYER ATTRIBUTES", x + 8, y + 8);
-        row(p, "Strength", "10", x + 8, y + 24); row(p, "Dexterity", "10", x + 8, y + 37);
-        row(p, "Vitality", value("health"), x + 8, y + 50); row(p, "Intelligence", value("spell"), x + 8, y + 63);
-        row(p, "Perception", "10", x + 8, y + 76); row(p, "Luck", "10", x + 8, y + 89);
-        section(p, "PLAYER STATISTICS", x + 8, y + 110);
-        row(p, "Health", value("health"), x + 8, y + 126); row(p, "Mana", value("mana"), x + 8, y + 139);
-        row(p, "Spell Power", value("spell"), x + 8, y + 152); row(p, "Cooldown", value("cooldown"), x + 8, y + 165);
-        section(p, "COMBAT", x + 8, y + 186);
-        row(p, "Damage", value("spell"), x + 8, y + 202); row(p, "Armor", value("armor"), x + 8, y + 215);
-        section(p, "RESISTANCES", x + 8, y + 236);
-        row(p, "Physical", "0%", x + 8, y + 252); row(p, "Fire", "0%", x + 8, y + 265);
-        row(p, "Frost", "0%", x + 8, y + 278); row(p, "Magic", "0%", x + 8, y + 291);
-        section(p, "ABILITIES & UTILITY", x + 8, y + 312);
-        row(p, "Move Speed", value("move"), x + 8, y + 328); row(p, "Mana Regen", value("regen"), x + 8, y + 341);
+        section(p, "PLAYER SUMMARY", x + 8, y + 8);
+        row(p, "Health", value("health"), x + 8, y + 26); row(p, "Mana", value("mana"), x + 8, y + 41);
+        row(p, "Spell Power", value("spell"), x + 8, y + 56); row(p, "Cooldown", value("cooldown"), x + 8, y + 71);
+        row(p, "Armor", value("armor"), x + 8, y + 86); row(p, "Mana Regen", value("regen"), x + 8, y + 101);
+        drawString(p, font, new TextComponent("Color = school  |  center = state"), x + 8, y + 122, 0xFF8F9BAA);
     }
 
     private void section(PoseStack p, String text, int x, int y) { drawString(p, font, new TextComponent(text), x, y, 0xFFFFD56A); }
@@ -144,10 +167,11 @@ public final class SkillTreeScreen extends Screen {
         int left = 18, top = 24;
         int right = width - 18, bottom = height - 18;
         int graphRight = right - PANEL_W - 8;
-        int gx = left + 12, gy = top + 38;
+        int gx = left + 12, gy = top + 184;
         int gw = graphRight - 10, gh = bottom - 8;
         double cx = gx + gw / 2d + panX, cy = gy + gh / 2d + panY;
         for (SkillNode n : SkillNode.all().values()) {
+            if (!visible(n)) continue;
             double x = cx + n.x() * zoom, y = cy + n.y() * zoom;
             double radius = n.id().equals("root") ? 28 : Math.max(12, 14 * zoom);
             if (Math.hypot(mx - x, my - y) <= radius) return n;

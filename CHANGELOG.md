@@ -1,3 +1,10 @@
+## 1.3.0+1.18.2
+
+- Cleaned up the talent-tree layout by separating filters, graph, selected-node details, and player summary.
+- Added specialization filters for Core, Fire, Frost, Storm, Arcane, Holy, and Void.
+- Added clearer selected and available node labels plus explicit effect, cost, prerequisite, and state details.
+- Kept graph filtering, hover detection, zoom, pan, and server-authoritative unlock behavior synchronized.
+
 ## 1.2.0+1.18.2
 
 - Expanded the progression from 41 to 59 skills with deeper spell-specialization branches.

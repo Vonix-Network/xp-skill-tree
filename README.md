@@ -4,6 +4,7 @@ Minecraft 1.18.2 Forge mod by Vonix.Network. Press **K** to open a server-author
 
 ## Features
 
+- **Cleaner talent-tree UI** with specialization filters, selected-node details, and a compact player summary
 - **59 skills** across eight colored paths: Arcane, Flame, Frost, Storm, Guardian, Ranger, Void, and Vitality
 - Deeper spell-specialization branches for Fire, Frost, Lightning, Arcane, Holy, and Void casting
 - Radial layout with a central Awakening node, branch connectors, milestone mastery nodes, and color-coded states
