@@ -11,7 +11,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(XPSkillTreeMod.MODID)
 public final class XPSkillTreeMod {
     public static final String MODID = "xpskilltree";
-    public XPSkillTreeMod() { FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup); FMLJavaModLoadingContext.get().getModEventBus().addListener(ModCapabilities::register); FMLJavaModLoadingContext.get().getModEventBus().addListener(CosmeticCapability::register); MinecraftForge.EVENT_BUS.register(this); }
+    public XPSkillTreeMod() {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModCapabilities::register);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
     private void commonSetup(FMLCommonSetupEvent e) { Network.register(); }
     @SubscribeEvent public void login(PlayerEvent.PlayerLoggedInEvent e) { if (e.getPlayer() instanceof ServerPlayer p) Network.sync(p); }
     @SubscribeEvent public void respawn(PlayerEvent.PlayerRespawnEvent e) { if (e.getPlayer() instanceof ServerPlayer p) Network.sync(p); }
