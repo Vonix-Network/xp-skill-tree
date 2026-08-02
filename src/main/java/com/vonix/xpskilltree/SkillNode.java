@@ -66,6 +66,31 @@ public final class SkillNode {
         add(m, "void_step", "Void Step", "Increase movement speed by 3%.", 55, 115, 2, "root", Effect.MOVE_SPEED, Branch.VOID, .03);
         add(m, "shadow_stride", "Shadow Stride", "Increase movement speed by 5%.", 110, 210, 3, "void_step", Effect.MOVE_SPEED, Branch.VOID, .05);
         add(m, "void_mastery", "Void Mastery", "Increase spell power by 10%.", 180, 275, 4, "shadow_stride", Effect.SPELL_DAMAGE, Branch.VOID, .10);
+
+        // Expanded spell-specialization layer: deeper caster choices for each school.
+        add(m, "ember_burst", "Ember Burst", "Fire spells deal 8% more spell power.", -455, -250, 5, "inferno_core", Effect.SPELL_DAMAGE, Branch.FIRE, .08);
+        add(m, "cinder_recall", "Cinder Recall", "Fire casting reduces cooldown pressure by 5%.", -520, -145, 6, "ember_burst", Effect.COOLDOWN, Branch.FIRE, .05);
+        add(m, "pyroclastic_surge", "Pyroclastic Surge", "Heavy fire magic gains 14% spell power.", -585, -285, 7, "cinder_recall", Effect.SPELL_DAMAGE, Branch.FIRE, .14);
+
+        add(m, "permafrost_aegis", "Permafrost Aegis", "Frost magic grants 5 additional armor.", -415, 205, 5, "absolute_zero", Effect.ARMOR, Branch.FROST, 5);
+        add(m, "winter_reservoir", "Winter Reservoir", "Frost spells increase maximum mana by 35.", -490, 300, 6, "permafrost_aegis", Effect.MAX_MANA, Branch.FROST, 35);
+        add(m, "everfrost", "Everfrost", "Frost casting improves spell power by 11%.", -580, 235, 7, "winter_reservoir", Effect.SPELL_DAMAGE, Branch.FROST, .11);
+
+        add(m, "static_attunement", "Static Attunement", "Lightning spells gain 9% spell power.", 405, -185, 5, "thunder_lord", Effect.SPELL_DAMAGE, Branch.LIGHTNING, .09);
+        add(m, "voltaic_memory", "Voltaic Memory", "Lightning casting reduces cooldowns by 10%.", 480, -285, 6, "static_attunement", Effect.COOLDOWN, Branch.LIGHTNING, .10);
+        add(m, "tempest_crown", "Tempest Crown", "Mastered lightning magic gains 16% spell power.", 575, -205, 7, "voltaic_memory", Effect.SPELL_DAMAGE, Branch.LIGHTNING, .16);
+
+        add(m, "quickened_channel", "Quickened Channel", "Arcane spells reduce cooldowns by 9%.", 420, 235, 5, "infinite_well", Effect.COOLDOWN, Branch.ARCANE, .09);
+        add(m, "mana_conduit", "Mana Conduit", "Gain 45 maximum mana for sustained casting.", 500, 320, 6, "quickened_channel", Effect.MAX_MANA, Branch.ARCANE, 45);
+        add(m, "archmage_focus", "Archmage Focus", "Arcane spells gain 15% spell power.", 590, 250, 7, "mana_conduit", Effect.SPELL_DAMAGE, Branch.ARCANE, .15);
+
+        add(m, "radiant_lexicon", "Radiant Lexicon", "Holy spells gain 8% spell power.", -270, 365, 5, "guardian_light", Effect.SPELL_DAMAGE, Branch.HOLY, .08);
+        add(m, "blessed_reserves", "Blessed Reserves", "Increase maximum mana by 40.", -360, 440, 6, "radiant_lexicon", Effect.MAX_MANA, Branch.HOLY, 40);
+        add(m, "sanctified_casting", "Sanctified Casting", "Holy casting improves spell power by 13%.", -465, 390, 7, "blessed_reserves", Effect.SPELL_DAMAGE, Branch.HOLY, .13);
+
+        add(m, "null_sigil", "Null Sigil", "Void spells gain 12% spell power.", 285, 390, 5, "void_mastery", Effect.SPELL_DAMAGE, Branch.VOID, .12);
+        add(m, "event_horizon", "Event Horizon", "Void casting reduces cooldowns by 11%.", 390, 470, 6, "null_sigil", Effect.COOLDOWN, Branch.VOID, .11);
+        add(m, "abyssal_apotheosis", "Abyssal Apotheosis", "Abyssal magic gains 17% spell power.", 510, 420, 7, "event_horizon", Effect.SPELL_DAMAGE, Branch.VOID, .17);
         NODES = Collections.unmodifiableMap(m);
     }
     private static void add(Map<String, SkillNode> m, String id, String name, String desc, int x, int y, int cost,
