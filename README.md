@@ -4,7 +4,8 @@ Minecraft 1.18.2 Forge mod by Vonix.Network. Press **K** to open a server-author
 
 ## Features
 
-- **41 skills** across eight colored paths: Arcane, Flame, Frost, Storm, Guardian, Ranger, Void, and Vitality
+- **59 skills** across eight colored paths: Arcane, Flame, Frost, Storm, Guardian, Ranger, Void, and Vitality
+- Deeper spell-specialization branches for Fire, Frost, Lightning, Arcane, Holy, and Void casting
 - Radial layout with a central Awakening node, branch connectors, milestone mastery nodes, and color-coded states
 - Hover detail panel with branch, effect, cost, and prerequisite information
 - Zoom with the mouse wheel and pan by dragging the tree
@@ -14,7 +15,7 @@ Minecraft 1.18.2 Forge mod by Vonix.Network. Press **K** to open a server-author
 
 ## Mod Description
 
-XP Skill Tree adds a deep, server-authoritative radial progression system to Minecraft 1.18.2. Press **K** to open the **TALENT TREE** and spend experience levels to unlock 41 connected skills across eight paths: Arcane, Flame, Frost, Storm, Guardian, Ranger, Void, and Vitality. Explore colored branches, inspect skill details, zoom and pan across the tree, and build a character that matches your playstyle. Progress is stored per player and synchronized safely between server and client. Optional Iron's Spells 'n Spellbooks integration enhances compatible spell-power and mana effects when that mod is installed.
+XP Skill Tree adds a deep, server-authoritative radial progression system to Minecraft 1.18.2. Press **K** to open the **TALENT TREE** and spend experience levels on 59 connected skills across eight paths: Arcane, Flame, Frost, Storm, Guardian, Ranger, Void, and Vitality. Explore colored branches, including deeper Fire, Frost, Lightning, Arcane, Holy, and Void spell-specialization paths, inspect skill details, zoom and pan across the tree, and build a character that matches your playstyle. Progress is stored per player and synchronized safely between server and client. Optional Iron's Spells 'n Spellbooks integration enhances compatible spell-power and mana effects when that mod is installed.
 
 ## Required Dependencies
 

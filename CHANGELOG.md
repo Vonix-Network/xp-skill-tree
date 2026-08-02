@@ -1,3 +1,9 @@
+## 1.2.0+1.18.2
+
+- Expanded the progression from 41 to 59 skills with deeper spell-specialization branches.
+- Added Fire, Frost, Lightning, Arcane, Holy, and Void endgame spell paths.
+- Added new spell power, cooldown, mana, and defensive specialization milestones.
+
 ## 1.1.1+1.18.2
 
 - Fixed talent click hit detection so the displayed graph and clickable nodes use the same coordinates.
